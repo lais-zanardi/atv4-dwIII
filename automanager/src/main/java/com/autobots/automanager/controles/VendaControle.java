@@ -9,6 +9,7 @@ import com.autobots.automanager.servicos.VendaServico;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class VendaControle {
     @Autowired private VendaMapeador mapeador;
     @Autowired private AdicionadorLinkVenda adicionadorLink;
 
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'GERENTE', 'VENDEDOR')")
     @PostMapping("/cadastrar")
     public ResponseEntity<VendaRespostaDTO> cadastrarVenda(@RequestBody VendaRequisicaoDTO requisicao) {
         Venda entidade = mapeador.requisicaoParaEntidade(requisicao);
@@ -30,7 +32,7 @@ public class VendaControle {
         adicionadorLink.adicionarLink(resposta);
         return new ResponseEntity<>(resposta, HttpStatus.CREATED);
     }
-
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'GERENTE', 'VENDEDOR')")
     @GetMapping("/obter")
     public ResponseEntity<List<VendaRespostaDTO>> obterVendas() {
         List<Venda> vendas = servico.obterTodas();
@@ -40,7 +42,7 @@ public class VendaControle {
         adicionadorLink.adicionarLink(respostas);
         return new ResponseEntity<>(respostas, HttpStatus.FOUND);
     }
-
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'GERENTE', 'VENDEDOR')")
     @GetMapping("/obter/{id}")
     public ResponseEntity<VendaRespostaDTO> obterVenda(@PathVariable Long id) {
         Venda venda = servico.obterPorId(id);
@@ -51,7 +53,7 @@ public class VendaControle {
         adicionadorLink.adicionarLink(resposta);
         return new ResponseEntity<>(resposta, HttpStatus.FOUND);
     }
-
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'GERENTE')")
     @PutMapping("/atualizar/{id}")
     public ResponseEntity<VendaRespostaDTO> atualizarVenda(@PathVariable Long id, @RequestBody VendaRequisicaoDTO requisicao) {
         Venda atualizacao = mapeador.requisicaoParaEntidade(requisicao);
@@ -67,6 +69,7 @@ public class VendaControle {
         return new ResponseEntity<>(resposta, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'GERENTE')")
     @DeleteMapping("/excluir/{id}")
     public ResponseEntity<?> excluirVenda(@PathVariable Long id) {
         if (servico.obterPorId(id) == null) {

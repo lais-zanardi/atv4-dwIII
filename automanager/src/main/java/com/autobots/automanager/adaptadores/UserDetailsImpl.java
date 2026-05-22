@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.autobots.automanager.entidades.Usuario;
 
-@SuppressWarnings("serial")
 public class UserDetailsImpl implements UserDetails {
 	private Usuario usuario;
 
@@ -23,7 +22,7 @@ public class UserDetailsImpl implements UserDetails {
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<SimpleGrantedAuthority> autoridades = new ArrayList<>();
 		for (Perfil perfil : usuario.getPerfis()) {
-			autoridades.add(new SimpleGrantedAuthority(perfil.name()));
+			autoridades.add(new SimpleGrantedAuthority("ROLE_"+perfil.name()));
 		}
 		return autoridades;
 	}

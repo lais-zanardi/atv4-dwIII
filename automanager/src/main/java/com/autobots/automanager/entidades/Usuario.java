@@ -44,9 +44,8 @@ public class Usuario {
     @JoinColumn(name = "usuario_id")
     private List<Telefone> telefones = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "usuario_id")
-    private List<Credencial> credenciais = new ArrayList<>();
+    @OneToOne(cascade = CascadeType.ALL)
+    private Credencial credencial;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "proprietario", orphanRemoval = true)
     private List<Veiculo> veiculos = new ArrayList<>();
