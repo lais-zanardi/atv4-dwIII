@@ -5,25 +5,40 @@ import com.autobots.automanager.entidades.Veiculo;
 import com.autobots.automanager.modelos.VeiculoAtualizador;
 import com.autobots.automanager.repositorios.UsuarioRepositorio;
 import com.autobots.automanager.repositorios.VeiculoRepositorio;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class VeiculoServico {
-     private VeiculoRepositorio repositorio;
-     private UsuarioRepositorio usuarioRepositorio;
-     private VeiculoAtualizador atualizador;
+
+    @Autowired
+    private VeiculoRepositorio repositorio;
+
+    @Autowired
+    private UsuarioRepositorio usuarioRepositorio;
+
+    @Autowired
+    private VeiculoAtualizador atualizador;
 
     public Veiculo salvar(Veiculo veiculo, Long idProprietario) {
-        Usuario proprietario = usuarioRepositorio.findById(idProprietario).orElseThrow();
+        Usuario proprietario = usuarioRepositorio.findById(idProprietario).orElse(null);
+        if (proprietario == null) {
+            return null;
+        }
         veiculo.setProprietario(proprietario);
         return repositorio.save(veiculo);
     }
-    public List<Veiculo> obterTodos() { return repositorio.findAll(); }
-    public Veiculo obterPorId(Long id) { return repositorio.findById(id).orElse(null); }
+
+    public List<Veiculo> obterTodos() {
+        return repositorio.findAll();
+    }
+
+    public Veiculo obterPorId(Long id) {
+        return repositorio.findById(id).orElse(null);
+    }
+
     public Veiculo atualizar(Veiculo atualizacao) {
         Veiculo alvo = obterPorId(atualizacao.getId());
         if (alvo != null) {
@@ -32,5 +47,8 @@ public class VeiculoServico {
         }
         return null;
     }
-    public void excluir(Long id) { repositorio.deleteById(id); }
+
+    public void excluir(Long id) {
+        repositorio.deleteById(id);
+    }
 }
