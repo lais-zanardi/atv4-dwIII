@@ -7,5 +7,5 @@ import com.autobots.automanager.entidades.Usuario;
 import java.util.Optional;
 
 public interface UsuarioRepositorio extends JpaRepository<Usuario, Long> {
-    Optional<Usuario> findByCredencialUsuario(String usuario);
+    Optional<Usuario> findByCredencialLogin(String login);
 }

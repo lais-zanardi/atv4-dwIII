@@ -32,7 +32,8 @@ public class VendaControle {
         adicionadorLink.adicionarLink(resposta);
         return new ResponseEntity<>(resposta, HttpStatus.CREATED);
     }
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'GERENTE', 'VENDEDOR')")
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'GERENTE')")
     @GetMapping("/obter")
     public ResponseEntity<List<VendaRespostaDTO>> obterVendas() {
         List<Venda> vendas = servico.obterTodas();
@@ -42,7 +43,8 @@ public class VendaControle {
         adicionadorLink.adicionarLink(respostas);
         return new ResponseEntity<>(respostas, HttpStatus.FOUND);
     }
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'GERENTE', 'VENDEDOR')")
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'GERENTE', 'VENDEDOR', 'CLIENTE')")
     @GetMapping("/obter/{id}")
     public ResponseEntity<VendaRespostaDTO> obterVenda(@PathVariable Long id) {
         Venda venda = servico.obterPorId(id);

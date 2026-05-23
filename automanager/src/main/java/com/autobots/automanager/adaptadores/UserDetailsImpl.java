@@ -1,10 +1,9 @@
 package com.autobots.automanager.adaptadores;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import com.autobots.automanager.enums.Perfil;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,19 +11,23 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.autobots.automanager.entidades.Usuario;
 
 public class UserDetailsImpl implements UserDetails {
-	private Usuario usuario;
+
+	private static final long serialVersionUID = 1L;
+	private final Usuario usuario;
 
 	public UserDetailsImpl(Usuario usuario) {
 		this.usuario = usuario;
 	}
 
+	public Long getId() {
+		return usuario.getId();
+	}
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		List<SimpleGrantedAuthority> autoridades = new ArrayList<>();
-		for (Perfil perfil : usuario.getPerfis()) {
-			autoridades.add(new SimpleGrantedAuthority("ROLE_"+perfil.name()));
-		}
-		return autoridades;
+		return usuario.getPerfis().stream()
+				.map(perfil -> new SimpleGrantedAuthority("ROLE_" + perfil.name()))
+				.collect(Collectors.toList());
 	}
 
 	@Override
@@ -34,7 +37,7 @@ public class UserDetailsImpl implements UserDetails {
 
 	@Override
 	public String getUsername() {
-		return usuario.getCredencial().getNomeUsuario();
+		return usuario.getCredencial().getLogin();
 	}
 
 	@Override
